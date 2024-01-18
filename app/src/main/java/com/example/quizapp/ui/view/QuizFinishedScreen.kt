@@ -68,7 +68,7 @@ fun QuizFinishedScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    "Wynik twojego przeciwnika:"
+                    "Wynik przeciwnika:"
                 )
                 Text(
                     opponentScore

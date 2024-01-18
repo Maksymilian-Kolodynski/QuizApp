@@ -28,7 +28,7 @@ fun QuizQuestionScreen(
 //        verticalArrangement = Arrangement.SpaceEvenly
     ){
         TitleCard(question.text)
-        // TODO dodać zdjęcie do quizu?
+        // TODO dodać zdjęcia do pytań z quizu?
         AnswerGrid(answerList = question.options, onAnswerClicked = onAnswerClicked)
     }
 }
