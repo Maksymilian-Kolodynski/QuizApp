@@ -53,7 +53,7 @@ fun QuizTypeSelectionScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ){
-        TitleCard("Nazwa apki")
+        TitleCard("QuizApp")
         Row(
             modifier = Modifier.weight(1f, true)
         ){
