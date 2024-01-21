@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -71,6 +69,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate")
+
+    // Coil (images)
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
