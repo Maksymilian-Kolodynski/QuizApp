@@ -15,9 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Alignment
+import coil.compose.AsyncImage
 
 
 @Composable
@@ -34,7 +34,21 @@ fun QuizCard(quiz: Quiz, onQuizClicked: (quiz: Quiz) -> Unit) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+
+            if (quiz.imageUrl != null) {
+                AsyncImage(
+                    model = quiz.imageUrl,
+                    contentDescription = quiz.desc,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                )
+            } else {
+                Spacer(modifier = Modifier.size(80.dp))
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
 
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
