@@ -2,17 +2,12 @@ package com.example.quizapp.ui.view
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.RemeasurementModifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.quizapp.models.Quiz
@@ -53,6 +48,6 @@ fun QuizListScreen(
 fun QuizListScreenPreview(){
     QuizListScreen(
         onQuizSelected={},
-        quizList = listOf(Quiz("1","tytuł", "opis"), Quiz("2","quiz", "opiss"))
+        quizList = listOf(Quiz("1","tytuł", "https://media.istockphoto.com/id/1415865722/pl/zdj%C4%99cie/panoramiczny-widok-na-jezioro-morskie-oko-lub-oko-morza-tatry-ko%C5%82o-zakopanego.jpg?s=612x612&w=0&k=20&c=fgdzxhJGDjNlz14-yyPA85krgDOOfcN63eArW6fNRd4=", "opis"), Quiz("2","quiz", null,"opiss"))
     )
 }
