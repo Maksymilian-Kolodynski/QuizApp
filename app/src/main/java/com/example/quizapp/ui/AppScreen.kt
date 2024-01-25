@@ -1,13 +1,12 @@
 package com.example.quizapp.ui
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,8 +15,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.quizapp.data.quizRepository
-import com.example.quizapp.models.Question
 import com.example.quizapp.ui.view.QuizBeginScreen
 import com.example.quizapp.ui.view.QuizFinishedScreen
 import com.example.quizapp.ui.view.QuizListScreen
@@ -88,7 +85,8 @@ fun QuizApp(
                         viewModel.createSession(it)
                         navController.navigate(QuizScreen.QuizBegin.name)
                     },
-                    quizList = viewModel.getQuizList()) // TODO załadowanie listy dostepnych quizów
+                    quizList = viewModel.getQuizList()
+                ) // TODO załadowanie listy dostepnych quizów
             }
             composable(route = QuizScreen.QuizQuestion.name) {
                 QuizQuestionScreen(

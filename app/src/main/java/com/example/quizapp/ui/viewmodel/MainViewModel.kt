@@ -1,7 +1,10 @@
 package com.example.quizapp.ui.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.quizapp.networking.Network
 import com.example.quizapp.data.QuizUiState
 import com.example.quizapp.data.questionRepository
 import com.example.quizapp.data.quizRepository
@@ -12,6 +15,8 @@ import com.example.quizapp.models.Session
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 
 class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
@@ -20,7 +25,6 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
 
     private lateinit var session: Session
-    private lateinit var quizList: List<Quiz>
     private lateinit var currentQuestion: Question
     private var score = 0
     private var maxQuestionIndex = 0
@@ -55,8 +59,12 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     }
 
     fun getQuizList(): List<Quiz> {
-        quizList = quizRepository
-        return quizList
+        val list: List<Quiz>
+        runBlocking {
+            list = Network.retrofit.getAllCategories()
+        }
+        return list
+        //quizList = quizRepository
     }
 
     fun createSession(quiz: Quiz): Session {
