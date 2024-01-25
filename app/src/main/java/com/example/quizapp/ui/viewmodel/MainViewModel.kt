@@ -1,21 +1,17 @@
 package com.example.quizapp.ui.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.quizapp.networking.Network
 import com.example.quizapp.data.QuizUiState
 import com.example.quizapp.data.questionRepository
-import com.example.quizapp.data.quizRepository
 import com.example.quizapp.data.sessionRepository
 import com.example.quizapp.models.Question
-import com.example.quizapp.models.Quiz
+import com.example.quizapp.models.Category
 import com.example.quizapp.models.Session
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 
@@ -58,8 +54,8 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         return true
     }
 
-    fun getQuizList(): List<Quiz> {
-        val list: List<Quiz>
+    fun getQuizList(): List<Category> {
+        val list: List<Category>
         runBlocking {
             list = Network.retrofit.getAllCategories()
         }
@@ -67,10 +63,10 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         //quizList = quizRepository
     }
 
-    fun createSession(quiz: Quiz): Session {
+    fun createSession(category: Category): Session {
         // some magic, call api to create quiz
 
-        session = Session("2","new-session", LocalDateTime.now(), quiz=quiz.id, questions = questionRepository)
+        session = Session("2","new-session", LocalDateTime.now(), category=category.id, questions = questionRepository)
         maxQuestionIndex = questionRepository.size
         return session
     }
