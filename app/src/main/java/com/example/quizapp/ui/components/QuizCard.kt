@@ -36,9 +36,9 @@ fun QuizCard(quiz: Quiz, onQuizClicked: (quiz: Quiz) -> Unit) {
         ) {
             Spacer(modifier = Modifier.width(8.dp))
 
-            if (quiz.imageUrl != null) {
+            if (quiz.iconLink != null) {
                 AsyncImage(
-                    model = quiz.imageUrl,
+                    model = quiz.iconLink,
                     contentDescription = quiz.desc,
                     modifier = Modifier
                         .size(80.dp)
