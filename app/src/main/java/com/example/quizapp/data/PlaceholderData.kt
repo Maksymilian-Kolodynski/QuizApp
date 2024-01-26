@@ -17,5 +17,5 @@ val questionRepository = listOf(
 )
 
 val sessionRepository = listOf(
-    Session("1","test-session", LocalDateTime.now(), categoryRepositories[0].id, questionRepository)
+    Session("1","test-session", LocalDateTime.now().toString(), categoryRepositories[0].id, questionRepository)
 )

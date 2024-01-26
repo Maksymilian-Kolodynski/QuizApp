@@ -1,5 +1,7 @@
 package com.example.quizapp.ui.viewmodel
 
+import android.net.Uri
+import android.nfc.Tag
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.quizapp.networking.Network
@@ -13,7 +15,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.runBlocking
+import okhttp3.Response
+import retrofit2.Call
 import java.time.LocalDateTime
+import kotlin.math.log
 
 class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
@@ -60,13 +65,15 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
             list = Network.retrofit.getAllCategories()
         }
         return list
-        //quizList = quizRepository
     }
 
     fun createSession(category: Category): Session {
         // some magic, call api to create quiz
-
-        session = Session("2","new-session", LocalDateTime.now(), category=category.id, questions = questionRepository)
+        runBlocking {
+            val response: retrofit2.Response<Void> = Network.retrofit.postNewSession(category.id)
+            val key: String = response.headers()["Location"]!!.split('/').last()
+            session = Network.retrofit.getSessionByKey(key)
+        }
         maxQuestionIndex = questionRepository.size
         return session
     }
