@@ -20,6 +20,7 @@ import com.example.quizapp.ui.view.QuizListScreen
 import com.example.quizapp.ui.view.QuizQuestionScreen
 import com.example.quizapp.ui.view.QuizTypeSelectionScreen
 import com.example.quizapp.ui.viewmodel.MainViewModel
+import retrofit2.HttpException
 
 enum class QuizScreen() {
     QuizTypeSelection,
@@ -56,22 +57,28 @@ fun QuizApp(
                         navController.navigate(QuizScreen.QuizList.name)
                     },
                     onSessionSelected = {
-                        // TODO pobranie sesji z api, przejscie do quizu
+                        // TODO przejscie do quizu
                         var sessionId = it
                         try {
                             viewModel.setSessionById(sessionId)
                             navController.navigate(QuizScreen.QuizQuestion.name)
                         }
+                        catch (e: HttpException) {
+                            if (e.code() == 404) {
+                                makeToast("Nie znaleziono sesji")
+                            }
+                        }
                         catch (e: Exception){
                             e.message?.let { it1 -> makeToast(it1) }
                         }
+
                     },
                     modifier = Modifier.fillMaxHeight()
                 )
             }
             composable(route = QuizScreen.QuizBegin.name) {
                 QuizBeginScreen(
-                    session = viewModel.getSession(),   // TODO przekazanie obecnej sesji quizu
+                    session = viewModel.getSession(),   // TODO przekazanie obecnej sesji quizu /chyba wytarczy tak jak jest?
                     onNextClicked = {
                         navController.navigate(QuizScreen.QuizQuestion.name)
                     }
@@ -80,7 +87,6 @@ fun QuizApp(
             composable(route = QuizScreen.QuizList.name) {
                 QuizListScreen(
                     onQuizSelected = {
-                        // TODO stworzenie nowej sesji, przejscie do ekranu poczatkowego
                         viewModel.createSession(it)
                         navController.navigate(QuizScreen.QuizBegin.name)
                     },

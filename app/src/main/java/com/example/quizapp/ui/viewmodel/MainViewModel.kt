@@ -1,24 +1,20 @@
 package com.example.quizapp.ui.viewmodel
 
-import android.net.Uri
-import android.nfc.Tag
+import android.service.controls.ControlsProviderService.TAG
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.quizapp.networking.Network
 import com.example.quizapp.data.QuizUiState
 import com.example.quizapp.data.questionRepository
 import com.example.quizapp.data.sessionRepository
-import com.example.quizapp.models.Question
 import com.example.quizapp.models.Category
+import com.example.quizapp.models.Question
 import com.example.quizapp.models.Session
+import com.example.quizapp.networking.Network
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.runBlocking
-import okhttp3.Response
-import retrofit2.Call
-import java.time.LocalDateTime
-import kotlin.math.log
 
 class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
@@ -31,14 +27,16 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     private var maxQuestionIndex = 0
 
     fun setSessionById(sessionKey: String): Session {
-        for (session in sessionRepository) {
-            if (session.key == sessionKey) {
-                this.session = session
-                this.maxQuestionIndex = session.questions.size
-                return session
+        try {
+            runBlocking {
+                session = Network.retrofit.getSessionByKey(sessionKey)
+                maxQuestionIndex = session.questions.size
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "setSessionById: ", e)
+            throw e
         }
-        throw Exception("Session $sessionKey not found!")
+        return session
     }
 
     fun getSession(): Session {
