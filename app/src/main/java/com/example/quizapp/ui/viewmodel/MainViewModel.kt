@@ -66,13 +66,12 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     }
 
     fun createSession(category: Category): Session {
-        // some magic, call api to create quiz
         runBlocking {
             val response: retrofit2.Response<Void> = Network.retrofit.postNewSession(category.id)
             val key: String = response.headers()["Location"]!!.split('/').last()
             session = Network.retrofit.getSessionByKey(key)
         }
-        maxQuestionIndex = questionRepository.size
+        maxQuestionIndex = session.questions.size
         return session
     }
 
