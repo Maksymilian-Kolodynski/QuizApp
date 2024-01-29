@@ -109,6 +109,7 @@ fun QuizApp(
             }
             composable(route = QuizScreen.QuizFinished.name) {
                 QuizFinishedScreen(
+                    viewModel = viewModel,
                     onExitClicked = {
                         // TODO powrót do wyboru typu quizu, viewmodel powinien sie resetowac
                         viewModel.resetState()

@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.quizapp.data.QuizUiState
-import com.example.quizapp.data.questionRepository
 import com.example.quizapp.data.sessionRepository
 import com.example.quizapp.models.Category
 import com.example.quizapp.models.Question
@@ -21,16 +20,16 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     private val _uiState = MutableStateFlow(savedStateHandle.get<QuizUiState>("uiState") ?: QuizUiState())
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
 
-    private lateinit var session: Session
+    private var session: MutableStateFlow<Session> = MutableStateFlow(sessionRepository[0])
     private lateinit var currentQuestion: Question
     private var score = 0
     private var maxQuestionIndex = 0
 
-    fun setSessionById(sessionKey: String): Session {
+    fun setSessionById(sessionKey: String): MutableStateFlow<Session> {
         try {
             runBlocking {
-                session = Network.retrofit.getSessionByKey(sessionKey)
-                maxQuestionIndex = session.questions.size
+                session.value = Network.retrofit.getSessionByKey(sessionKey)
+                maxQuestionIndex = session.value.questions.size
             }
         } catch (e: Exception) {
             Log.e(TAG, "setSessionById: ", e)
@@ -40,12 +39,12 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     }
 
     fun getSession(): Session {
-        return this.session
+        return this.session.value
     }
 
     fun getNextQuestion(): Question {
         if (!this.isQuizFinished()) {
-            currentQuestion = session.questions.get(uiState.value.currentQuestionIndex)
+            currentQuestion = session.value.questions.get(uiState.value.currentQuestionIndex)
         }
         return currentQuestion
     }
@@ -65,13 +64,13 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         return list
     }
 
-    fun createSession(category: Category): Session {
+    fun createSession(category: Category): MutableStateFlow<Session> {
         runBlocking {
             val response: retrofit2.Response<Void> = Network.retrofit.postNewSession(category.id)
             val key: String = response.headers()["Location"]!!.split('/').last()
-            session = Network.retrofit.getSessionByKey(key)
+            session.value = Network.retrofit.getSessionByKey(key)
         }
-        maxQuestionIndex = session.questions.size
+        maxQuestionIndex = session.value.questions.size
         return session
     }
 
