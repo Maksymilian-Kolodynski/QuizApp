@@ -64,21 +64,6 @@ fun QuizFinishedScreen(
                 )
             }
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    "Wynik przeciwnika:"
-                )
-                Text(
-                    opponentScore
-                )
-            }
         }
         Row(
             horizontalArrangement = Arrangement.Center,
