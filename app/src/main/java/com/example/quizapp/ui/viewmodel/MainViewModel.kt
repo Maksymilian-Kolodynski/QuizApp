@@ -1,48 +1,50 @@
 package com.example.quizapp.ui.viewmodel
 
+import android.service.controls.ControlsProviderService.TAG
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.quizapp.data.QuizUiState
-import com.example.quizapp.data.questionRepository
-import com.example.quizapp.data.quizRepository
 import com.example.quizapp.data.sessionRepository
+import com.example.quizapp.models.Category
 import com.example.quizapp.models.Question
-import com.example.quizapp.models.Quiz
 import com.example.quizapp.models.Session
+import com.example.quizapp.networking.Network
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.time.LocalDateTime
+import kotlinx.coroutines.runBlocking
 
 class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val _uiState = MutableStateFlow(savedStateHandle.get<QuizUiState>("uiState") ?: QuizUiState())
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
 
-    private lateinit var session: Session
-    private lateinit var quizList: List<Quiz>
+    private var session: MutableStateFlow<Session> = MutableStateFlow(sessionRepository[0])
     private lateinit var currentQuestion: Question
     private var score = 0
     private var maxQuestionIndex = 0
 
-    fun setSessionById(sessionKey: String): Session {
-        for (session in sessionRepository) {
-            if (session.key == sessionKey) {
-                this.session = session
-                this.maxQuestionIndex = session.questions.size
-                return session
+    fun setSessionById(sessionKey: String): MutableStateFlow<Session> {
+        try {
+            runBlocking {
+                session.value = Network.retrofit.getSessionByKey(sessionKey)
+                maxQuestionIndex = session.value.questions.size
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "setSessionById: ", e)
+            throw e
         }
-        throw Exception("Session $sessionKey not found!")
+        return session
     }
 
     fun getSession(): Session {
-        return this.session
+        return this.session.value
     }
 
     fun getNextQuestion(): Question {
         if (!this.isQuizFinished()) {
-            currentQuestion = session.questions.get(uiState.value.currentQuestionIndex)
+            currentQuestion = session.value.questions.get(uiState.value.currentQuestionIndex)
         }
         return currentQuestion
     }
@@ -54,16 +56,21 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         return true
     }
 
-    fun getQuizList(): List<Quiz> {
-        quizList = quizRepository
-        return quizList
+    fun getQuizList(): List<Category> {
+        val list: List<Category>
+        runBlocking {
+            list = Network.retrofit.getAllCategories()
+        }
+        return list
     }
 
-    fun createSession(quiz: Quiz): Session {
-        // some magic, call api to create quiz
-
-        session = Session("2","new-session", LocalDateTime.now(), quiz=quiz.id, questions = questionRepository)
-        maxQuestionIndex = questionRepository.size
+    fun createSession(category: Category): MutableStateFlow<Session> {
+        runBlocking {
+            val response: retrofit2.Response<Void> = Network.retrofit.postNewSession(category.id)
+            val key: String = response.headers()["Location"]!!.split('/').last()
+            session.value = Network.retrofit.getSessionByKey(key)
+        }
+        maxQuestionIndex = session.value.questions.size
         return session
     }
 

@@ -1,7 +1,5 @@
 package com.example.quizapp.ui
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
@@ -16,14 +14,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.quizapp.data.quizRepository
-import com.example.quizapp.models.Question
 import com.example.quizapp.ui.view.QuizBeginScreen
 import com.example.quizapp.ui.view.QuizFinishedScreen
 import com.example.quizapp.ui.view.QuizListScreen
 import com.example.quizapp.ui.view.QuizQuestionScreen
 import com.example.quizapp.ui.view.QuizTypeSelectionScreen
 import com.example.quizapp.ui.viewmodel.MainViewModel
+import retrofit2.HttpException
 
 enum class QuizScreen() {
     QuizTypeSelection,
@@ -60,22 +57,28 @@ fun QuizApp(
                         navController.navigate(QuizScreen.QuizList.name)
                     },
                     onSessionSelected = {
-                        // TODO pobranie sesji z api, przejscie do quizu
+                        // TODO przejscie do quizu
                         var sessionId = it
                         try {
                             viewModel.setSessionById(sessionId)
                             navController.navigate(QuizScreen.QuizQuestion.name)
                         }
+                        catch (e: HttpException) {
+                            if (e.code() == 404) {
+                                makeToast("Nie znaleziono sesji")
+                            }
+                        }
                         catch (e: Exception){
                             e.message?.let { it1 -> makeToast(it1) }
                         }
+
                     },
                     modifier = Modifier.fillMaxHeight()
                 )
             }
             composable(route = QuizScreen.QuizBegin.name) {
                 QuizBeginScreen(
-                    session = viewModel.getSession(),   // TODO przekazanie obecnej sesji quizu
+                    session = viewModel.getSession(),   // TODO przekazanie obecnej sesji quizu /chyba wytarczy tak jak jest?
                     onNextClicked = {
                         navController.navigate(QuizScreen.QuizQuestion.name)
                     }
@@ -84,11 +87,11 @@ fun QuizApp(
             composable(route = QuizScreen.QuizList.name) {
                 QuizListScreen(
                     onQuizSelected = {
-                        // TODO stworzenie nowej sesji, przejscie do ekranu poczatkowego
                         viewModel.createSession(it)
                         navController.navigate(QuizScreen.QuizBegin.name)
                     },
-                    quizList = viewModel.getQuizList()) // TODO załadowanie listy dostepnych quizów
+                    categoryList = viewModel.getQuizList()
+                )
             }
             composable(route = QuizScreen.QuizQuestion.name) {
                 QuizQuestionScreen(
@@ -106,6 +109,7 @@ fun QuizApp(
             }
             composable(route = QuizScreen.QuizFinished.name) {
                 QuizFinishedScreen(
+                    viewModel = viewModel,
                     onExitClicked = {
                         // TODO powrót do wyboru typu quizu, viewmodel powinien sie resetowac
                         viewModel.resetState()

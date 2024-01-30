@@ -33,9 +33,9 @@ fun QuizQuestionScreen(
     ){
         TitleCard(question.text)
         Spacer(modifier = Modifier.width(8.dp))
-        if (question.imageUrl != null) {
+        if (question.imgLink != null) {
             AsyncImage(
-                model = question.imageUrl,
+                model = question.imgLink,
                 contentDescription = question.text,
                 modifier = Modifier
                     .size(300.dp)

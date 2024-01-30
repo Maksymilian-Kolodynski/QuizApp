@@ -10,14 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.quizapp.models.Quiz
+import com.example.quizapp.models.Category
 import com.example.quizapp.ui.components.QuizCard
 import com.example.quizapp.ui.components.TitleCard
 
 @Composable
 fun QuizListScreen(
-    onQuizSelected: (Quiz) -> Unit,
-    quizList: List<Quiz>,
+    onQuizSelected: (Category) -> Unit,
+    categoryList: List<Category>,
     modifier: Modifier = Modifier
 ) {
     Column (
@@ -35,7 +35,7 @@ fun QuizListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                for (quiz in quizList){
+                for (quiz in categoryList){
                     QuizCard(quiz, onQuizSelected)
                 }
             }
@@ -48,6 +48,6 @@ fun QuizListScreen(
 fun QuizListScreenPreview(){
     QuizListScreen(
         onQuizSelected={},
-        quizList = listOf(Quiz("1","tytuł", "https://media.istockphoto.com/id/1415865722/pl/zdj%C4%99cie/panoramiczny-widok-na-jezioro-morskie-oko-lub-oko-morza-tatry-ko%C5%82o-zakopanego.jpg?s=612x612&w=0&k=20&c=fgdzxhJGDjNlz14-yyPA85krgDOOfcN63eArW6fNRd4=", "opis"), Quiz("2","quiz", null,"opiss"))
+        categoryList = listOf(Category("1","tytuł", "https://media.istockphoto.com/id/1415865722/pl/zdj%C4%99cie/panoramiczny-widok-na-jezioro-morskie-oko-lub-oko-morza-tatry-ko%C5%82o-zakopanego.jpg?s=612x612&w=0&k=20&c=fgdzxhJGDjNlz14-yyPA85krgDOOfcN63eArW6fNRd4=", "opis"), Category("2","quiz", null,"opiss"))
     )
 }

@@ -75,6 +75,6 @@ fun QuizBeginScreenPreview(){
     )
     QuizBeginScreen(
         onNextClicked = {},
-        session = Session("1", "1234", LocalDateTime.now(), "quizid", questions)
+        session = Session("1", "1234", LocalDateTime.now().toString(), "quizid", questions)
     )
 }

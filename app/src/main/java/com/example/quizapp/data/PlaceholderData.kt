@@ -1,13 +1,13 @@
 package com.example.quizapp.data
 
 import com.example.quizapp.models.Question
-import com.example.quizapp.models.Quiz
+import com.example.quizapp.models.Category
 import com.example.quizapp.models.Session
 import java.time.LocalDateTime
 
-val quizRepository = listOf(
-    Quiz("1","Quiz 1", "https://media.istockphoto.com/id/1415865722/pl/zdj%C4%99cie/panoramiczny-widok-na-jezioro-morskie-oko-lub-oko-morza-tatry-ko%C5%82o-zakopanego.jpg?s=612x612&w=0&k=20&c=fgdzxhJGDjNlz14-yyPA85krgDOOfcN63eArW6fNRd4=", desc="Bardzo krótki quiz"),
-    Quiz("2","Quiz 2", null, desc="zwykły quiz")
+val categoryRepositories = listOf(
+    Category("1","Quiz 1", "https://media.istockphoto.com/id/1415865722/pl/zdj%C4%99cie/panoramiczny-widok-na-jezioro-morskie-oko-lub-oko-morza-tatry-ko%C5%82o-zakopanego.jpg?s=612x612&w=0&k=20&c=fgdzxhJGDjNlz14-yyPA85krgDOOfcN63eArW6fNRd4=", desc="Bardzo krótki quiz"),
+    Category("2","Quiz 2", null, desc="zwykły quiz")
 )
 
 val questionRepository = listOf(
@@ -17,5 +17,5 @@ val questionRepository = listOf(
 )
 
 val sessionRepository = listOf(
-    Session("1","test-session", LocalDateTime.now(), quizRepository[0].id, questionRepository)
+    Session("1","test-session", LocalDateTime.now().toString(), categoryRepositories[0].id, questionRepository)
 )

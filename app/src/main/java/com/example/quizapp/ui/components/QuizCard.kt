@@ -2,7 +2,7 @@ package com.example.quizapp.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import com.example.quizapp.models.Quiz
+import com.example.quizapp.models.Category
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.Card
 import androidx.compose.ui.Modifier
@@ -21,13 +21,13 @@ import coil.compose.AsyncImage
 
 
 @Composable
-fun QuizCard(quiz: Quiz, onQuizClicked: (quiz: Quiz) -> Unit) {
+fun QuizCard(category: Category, onQuizClicked: (category: Category) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .clickable(onClick = { onQuizClicked(quiz) }),
+            .clickable(onClick = { onQuizClicked(category) }),
     ) {
         Row(
             modifier = Modifier
@@ -36,10 +36,10 @@ fun QuizCard(quiz: Quiz, onQuizClicked: (quiz: Quiz) -> Unit) {
         ) {
             Spacer(modifier = Modifier.width(8.dp))
 
-            if (quiz.imageUrl != null) {
+            if (category.iconLink != null) {
                 AsyncImage(
-                    model = quiz.imageUrl,
-                    contentDescription = quiz.desc,
+                    model = category.iconLink,
+                    contentDescription = category.desc,
                     modifier = Modifier
                         .size(80.dp)
                         .clip(RoundedCornerShape(16.dp))
@@ -52,12 +52,12 @@ fun QuizCard(quiz: Quiz, onQuizClicked: (quiz: Quiz) -> Unit) {
 
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
-                    text = quiz.title,
+                    text = category.title,
                     modifier = Modifier.padding(0.dp, 0.dp, 12.dp, 0.dp),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = quiz.desc,
+                    text = category.desc,
                     modifier = Modifier.padding(0.dp, 0.dp, 12.dp, 0.dp),
                 )
             }
